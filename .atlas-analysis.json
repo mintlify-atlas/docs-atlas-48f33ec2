@@ -1,0 +1,65 @@
+{
+  "projectType": "frontend",
+  "projectName": "Bennett Eghan Portfolio",
+  "projectDescription": "A personal portfolio website built with React, Vite, and MDX for blogging and project showcases.",
+  "theme": "palm",
+  "primaryColor": "#0e2544",
+  "lightColor": "#84949d",
+  "darkColor": "#c9cdd3",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Components",
+        "pages": [
+          "components/overview",
+          "components/ui-components",
+          "components/layout"
+        ]
+      },
+      {
+        "group": "Styling",
+        "pages": [
+          "styling/tailwind-config",
+          "styling/design-system"
+        ]
+      },
+      {
+        "group": "Content",
+        "pages": [
+          "content/blog-posts",
+          "content/projects"
+        ]
+      },
+      {
+        "group": "Development",
+        "pages": [
+          "development/contributing",
+          "development/license"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "React + Vite frontend with TypeScript",
+    "MDX-powered blog system with code highlighting",
+    "Tailwind CSS styling with custom design system",
+    "Static site generation for Vercel deployment",
+    "Responsive project showcase with animations"
+  ],
+  "publicApiSurface": [
+    "Home page component (src/pages/home.tsx)",
+    "Projects page component (src/pages/projects.tsx)",
+    "Blog listing and detail pages (src/pages/blog/)",
+    "Button UI component (src/components/ui/button.tsx)",
+    "Navigation component (src/custom/nav.tsx)",
+    "Vite configuration with MDX and sitemap plugins",
+    "Tailwind CSS configuration"
+  ]
+}
