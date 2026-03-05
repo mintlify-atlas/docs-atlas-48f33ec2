@@ -1,97 +1,182 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: Introduction
+description: Documentation for the Bennett Eghan personal portfolio website - a React + Vite application with MDX blogging and project showcases.
 ---
 
-## Setting up
+<div style={{
+  background: 'linear-gradient(135deg, #0e2544 0%, #84949d 100%)',
+  borderRadius: '4px',
+  padding: '48px 32px',
+  marginBottom: '32px',
+  color: '#ffffff'
+}}>
+  <h1 style={{
+    fontFamily: 'Courier New, monospace',
+    fontSize: '36px',
+    fontWeight: '700',
+    marginBottom: '16px',
+    color: '#ffffff'
+  }}>
+    Bennett Eghan Portfolio
+  </h1>
+  <p style={{
+    fontFamily: 'Courier New, monospace',
+    fontSize: '16px',
+    fontWeight: '400',
+    maxWidth: '600px',
+    color: '#ffffff',
+    opacity: '0.95'
+  }}>
+    A personal portfolio website built with React, Vite, and MDX for blogging and project showcases. This documentation covers the architecture, components, styling, and development workflow.
+  </p>
+</div>
 
-Get your documentation site up and running in minutes.
+## Overview
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+This portfolio website is a modern frontend application showcasing personal projects, technical blog posts, and professional experience. Built with performance and developer experience in mind, it uses cutting-edge web technologies.
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Get Started" icon="rocket" href="/quickstart">
+    Set up the development environment and run locally
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Components" icon="layer-group" href="/components/overview">
+    Explore the React component architecture
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Styling System" icon="palette" href="/styling/design-system">
+    Learn about Tailwind CSS configuration and design tokens
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Content Management" icon="pen-to-square" href="/content/blog-posts">
+    Understand how to write and manage MDX blog posts
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## Key Features
 
-Everything you need to create world-class documentation.
+<AccordionGroup>
+  <Accordion title="React + Vite Frontend with TypeScript">
+    Modern development stack with fast hot module replacement (HMR), TypeScript for type safety, and optimized production builds. The application uses React 18 features including hooks, context, and concurrent rendering.
+  </Accordion>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+  <Accordion title="MDX-Powered Blog System">
+    Write blog posts in MDX (Markdown + JSX) with full support for:
+    - Syntax highlighting via rehype-prism-plus
+    - GitHub-flavored markdown with remark-gfm
+    - Emoji support with remark-emoji
+    - Custom React components within content
+    - Automatic reading time calculation
+  </Accordion>
 
-## Need inspiration?
+  <Accordion title="Tailwind CSS Styling">
+    Utility-first CSS framework with a custom design system featuring:
+    - Courier New monospace typography
+    - Custom color palette (#0e2544, #84949d, #c9cdd3)
+    - Tailwind CSS v4 with @tailwindcss/vite plugin
+    - Responsive design patterns
+    - Custom animations via tailwindcss-animate
+  </Accordion>
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+  <Accordion title="Static Site Generation">
+    Optimized for Vercel deployment with:
+    - vite-ssg for static site generation
+    - Automatic sitemap generation
+    - SEO meta tags via react-helmet-async
+    - Fast page loads and excellent Core Web Vitals
+  </Accordion>
+
+  <Accordion title="Responsive Project Showcase">
+    Dynamic project listing with:
+    - Motion animations using Framer Motion
+    - Interactive hover states
+    - GitHub and live demo links
+    - Technology stack badges
+  </Accordion>
+</AccordionGroup>
+
+## Technology Stack
+
+The portfolio is built with the following technologies:
+
+| Category | Technologies |
+|----------|-------------|
+| **Framework** | React 18, Vite 6 |
+| **Language** | TypeScript 5.7 |
+| **Styling** | Tailwind CSS 4, @tailwindcss/typography |
+| **Content** | MDX 3, remark-gfm, rehype-prism-plus |
+| **Animation** | Framer Motion 12 |
+| **Routing** | React Router 6, vite-plugin-pages |
+| **Icons** | iconsax-react, lucide-react, pikaicons |
+| **Build** | Vite SSG, vite-plugin-sitemap |
+| **Deployment** | Vercel |
+
+## Project Structure
+
+```
+bennett-eghan/
+├── src/
+│   ├── pages/          # Route pages
+│   │   ├── home.tsx    # Homepage
+│   │   ├── projects.tsx # Projects showcase
+│   │   ├── blog/       # Blog posts (MDX)
+│   │   └── layout.tsx  # Layout wrapper
+│   ├── components/
+│   │   └── ui/         # UI components
+│   ├── custom/         # Custom components (nav, etc.)
+│   ├── lib/            # Utilities
+│   └── assets/         # Static assets
+├── public/             # Public static files
+├── vite.config.ts      # Vite configuration
+├── tsconfig.json       # TypeScript configuration
+└── package.json        # Dependencies
+```
+
+## Use Cases
+
+This portfolio template is ideal for:
+
+- **Software Engineers** — Showcase projects, write technical blog posts, and maintain an online presence
+- **Frontend Developers** — Demonstrate React, TypeScript, and modern CSS skills
+- **Technical Writers** — Publish articles with code examples and rich formatting
+- **Open Source Contributors** — Document and share your contributions
+
+## Next Steps
+
+<Steps>
+  <Step title="Clone the repository">
+    Get started by cloning the repository and installing dependencies:
+    ```bash
+    git clone https://github.com/abena07/bennett-eghan.git
+    cd bennett-eghan
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install all required packages:
+    ```bash
+    bun install
+    # or
+    npm install
+    # or
+    yarn install
+    ```
+  </Step>
+
+  <Step title="Run development server">
+    Start the development server with hot reload:
+    ```bash
+    bun dev
+    ```
+    Open [http://localhost:5173](http://localhost:5173) to view the site.
+  </Step>
+
+  <Step title="Customize content">
+    Replace personal information, blog posts, and project data with your own content.
+  </Step>
+</Steps>
+
+<Note>
+  **License Notice**: This project is MIT licensed. When forking or cloning, please remove all personal information (resume, blog posts, images) before deploying your own version.
+</Note>
+
+## Support & Contribution
+
+For questions, issues, or contributions, visit the [GitHub repository](https://github.com/abena07/bennett-eghan). Pull requests are welcome!

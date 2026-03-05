@@ -1,0 +1,369 @@
+---
+title: UI Components
+description: Reusable UI components documentation
+---
+
+The portfolio uses a design system approach with reusable UI components built on Radix UI primitives, styled with Tailwind CSS and class-variance-authority.
+
+## Button Component
+
+The Button component is a flexible, accessible button with multiple variants and sizes.
+
+### Location
+
+```
+src/components/ui/button.tsx
+```
+
+### Features
+
+<CardGroup cols={2}>
+  <Card title="Type-Safe Variants" icon="shield-check">
+    Uses CVA for compile-time variant validation
+  </Card>
+  <Card title="Radix Slot Support" icon="plug">
+    Can render as any element using `asChild` prop
+  </Card>
+  <Card title="Accessible" icon="universal-access">
+    Built-in focus states and ARIA support
+  </Card>
+  <Card title="Dark Mode Ready" icon="moon">
+    Includes dark mode styling variants
+  </Card>
+</CardGroup>
+
+### Implementation
+
+<Accordion title="Full Button Component Code">
+```tsx
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        outline:
+          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+        secondary:
+          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+        ghost:
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        sm: "h-8 gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-10 px-6 has-[>svg]:px-4",
+        icon: "size-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }) {
+  const Comp = asChild ? Slot : "button"
+
+  return (
+    <Comp
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
+}
+
+export { Button, buttonVariants }
+```
+</Accordion>
+
+## Props API
+
+### Button Props
+
+<ParamField path="variant" type="string" default="default">
+  The visual style variant of the button.
+  
+  **Options**: `default`, `destructive`, `outline`, `secondary`, `ghost`, `link`
+</ParamField>
+
+<ParamField path="size" type="string" default="default">
+  The size of the button.
+  
+  **Options**: `default`, `sm`, `lg`, `icon`
+</ParamField>
+
+<ParamField path="asChild" type="boolean" default={false}>
+  When `true`, the button will merge its props and behavior onto its immediate child using Radix Slot.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the button.
+</ParamField>
+
+<ParamField path="...props" type="React.ComponentProps<'button'>">
+  All standard HTML button attributes are supported.
+</ParamField>
+
+## Variants
+
+<Tabs>
+  <Tab title="default">
+    The primary button style with solid background.
+    
+    ```tsx
+    <Button variant="default">Click me</Button>
+    ```
+    
+    **Style**: Primary color background with white text and hover darkening effect.
+  </Tab>
+  
+  <Tab title="destructive">
+    Used for destructive or dangerous actions.
+    
+    ```tsx
+    <Button variant="destructive">Delete</Button>
+    ```
+    
+    **Style**: Red/destructive background with enhanced focus ring for safety.
+  </Tab>
+  
+  <Tab title="outline">
+    Outlined button with transparent background.
+    
+    ```tsx
+    <Button variant="outline">Cancel</Button>
+    ```
+    
+    **Style**: Border with background fill on hover, adapts to dark mode.
+  </Tab>
+  
+  <Tab title="secondary">
+    Secondary action style.
+    
+    ```tsx
+    <Button variant="secondary">Learn More</Button>
+    ```
+    
+    **Style**: Secondary color background, less prominent than primary.
+  </Tab>
+  
+  <Tab title="ghost">
+    Minimal button with no background until hover.
+    
+    ```tsx
+    <Button variant="ghost">Options</Button>
+    ```
+    
+    **Style**: Transparent background with subtle hover effect.
+  </Tab>
+  
+  <Tab title="link">
+    Styled as a text link with underline.
+    
+    ```tsx
+    <Button variant="link">Read more</Button>
+    ```
+    
+    **Style**: Appears as underlined text link, useful for inline actions.
+  </Tab>
+</Tabs>
+
+## Sizes
+
+<CodeGroup>
+
+```tsx Small
+<Button size="sm">Small Button</Button>
+// Height: 32px (h-8), Padding: 12px (px-3)
+```
+
+```tsx Default
+<Button size="default">Default Button</Button>
+// Height: 36px (h-9), Padding: 16px (px-4)
+```
+
+```tsx Large
+<Button size="lg">Large Button</Button>
+// Height: 40px (h-10), Padding: 24px (px-6)
+```
+
+```tsx Icon
+<Button size="icon">
+  <IconComponent />
+</Button>
+// Square: 36x36px (size-9)
+```
+
+</CodeGroup>
+
+## Usage Examples
+
+### Basic Button
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+function Example() {
+  return (
+    <Button onClick={() => console.log("clicked")}>
+      Click me
+    </Button>
+  );
+}
+```
+
+### Button with Icon
+
+The Button automatically styles SVG children:
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { Github } from "pikaicons";
+
+function Example() {
+  return (
+    <Button variant="outline">
+      <Github />
+      View on GitHub
+    </Button>
+  );
+}
+```
+
+### Button as Link (Slot Pattern)
+
+Use `asChild` to render the button as a different element:
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+
+function Example() {
+  return (
+    <Button asChild variant="ghost">
+      <Link to="/about">About</Link>
+    </Button>
+  );
+}
+```
+
+<Note>
+  When `asChild={true}`, the Button component merges its styling and props onto the child element. This is useful for maintaining button styling while rendering as links, router components, or custom elements.
+</Note>
+
+### Disabled State
+
+```tsx
+<Button disabled>
+  Loading...
+</Button>
+```
+
+**Styling**: Automatically applies `pointer-events-none` and `opacity-50` when disabled.
+
+## Styling System
+
+### Class Variance Authority (CVA)
+
+The button uses CVA for managing variants:
+
+```tsx
+const buttonVariants = cva(
+  "base-classes",  // Applied to all buttons
+  {
+    variants: {      // Conditional classes
+      variant: { /* ... */ },
+      size: { /* ... */ },
+    },
+    defaultVariants: { /* ... */ },
+  }
+)
+```
+
+### Utility Function: `cn`
+
+The `cn` utility combines `clsx` and `tailwind-merge` for intelligent class merging:
+
+```tsx
+// src/lib/utils.ts
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+**Benefits**:
+- Merges Tailwind classes intelligently (e.g., `px-4 px-6` → `px-6`)
+- Handles conditional classes
+- Prevents class conflicts
+
+### Custom Styling
+
+```tsx
+<Button 
+  variant="outline" 
+  className="bg-blue-500 hover:bg-blue-600"
+>
+  Custom Styled
+</Button>
+```
+
+<Warning>
+  Custom classes are merged with variant classes using `cn()`. Some Tailwind classes may override variant styles, while others will be intelligently merged.
+</Warning>
+
+## Accessibility Features
+
+<AccordionGroup>
+  <Accordion title="Keyboard Navigation">
+    - Standard button keyboard behavior (Space/Enter to activate)
+    - Custom focus-visible styles with ring indicator
+    - Focus ring color: `ring-ring/50` with 3px width
+  </Accordion>
+  
+  <Accordion title="Screen Readers">
+    - Semantic `<button>` element by default
+    - Supports ARIA attributes via props
+    - `data-slot="button"` attribute for component identification
+  </Accordion>
+  
+  <Accordion title="Error States">
+    - `aria-invalid` styling support
+    - Destructive variant has enhanced focus ring
+    - Disabled state prevents interaction
+  </Accordion>
+</AccordionGroup>
+
+## Related Components
+
+<CardGroup cols={2}>
+  <Card title="Navigation" icon="compass" href="/components/layout#navigation">
+    See how buttons are used in navigation
+  </Card>
+  <Card title="Component Overview" icon="list" href="/components/overview">
+    Learn about the component architecture
+  </Card>
+</CardGroup>

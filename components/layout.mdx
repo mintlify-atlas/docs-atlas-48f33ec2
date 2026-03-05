@@ -1,0 +1,550 @@
+---
+title: Layout Components
+description: Layout and page structure components
+---
+
+The portfolio uses a clean layout system with a root Layout component and custom navigation, providing consistent structure across all pages.
+
+## Layout Component
+
+The Layout component is the root wrapper for all pages, providing the base structure, navigation, and footer.
+
+### Location
+
+```
+src/pages/layout.tsx
+```
+
+### Structure
+
+<Tabs>
+  <Tab title="Visual Layout">
+    ```
+    ┌─────────────────────────────────────┐
+    │          Centered Column            │
+    │         (max-w-2xl)                 │
+    │                                     │
+    │  ┌───────────────────────────────┐  │
+    │  │         Navbar                │  │
+    │  └───────────────────────────────┘  │
+    │                                     │
+    │  ┌───────────────────────────────┐  │
+    │  │                               │  │
+    │  │         Main Content          │  │
+    │  │         (Outlet)              │  │
+    │  │                               │  │
+    │  └───────────────────────────────┘  │
+    │                                     │
+    │  ┌───────────────────────────────┐  │
+    │  │         Footer                │  │
+    │  └───────────────────────────────┘  │
+    └─────────────────────────────────────┘
+    ```
+  </Tab>
+  
+  <Tab title="Implementation">
+    ```tsx
+    import { Outlet } from "react-router-dom"; 
+    import { Navbar } from "@/custom/nav";
+
+    export function Layout() {
+      return (
+        <div className="min-h-screen flex flex-col items-center px-6 w-full">
+          {/* Narrow centered column - content flows top to bottom */}
+          <div className="w-full max-w-2xl flex flex-col pt-10 pb-16 min-h-screen">
+            <Navbar />
+            <main className="w-full mt-2 flex-1">
+              <Outlet />
+            </main>
+            <footer className="mt-auto pt-8 text-left text-[12px] text-[#0B0F1F]/80">
+              © {new Date().getFullYear()} | Phillipa Bennett-Eghan
+            </footer>
+          </div>
+        </div>
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+### Design Decisions
+
+<CardGroup cols={2}>
+  <Card title="Centered Layout" icon="align-center">
+    Max width of `672px` (max-w-2xl) for optimal reading
+  </Card>
+  <Card title="Flexible Height" icon="arrows-up-down">
+    Uses `flex-1` on main and `mt-auto` on footer for sticky footer
+  </Card>
+  <Card title="Responsive Padding" icon="expand">
+    `px-6` (24px) horizontal padding for mobile-friendly spacing
+  </Card>
+  <Card title="Consistent Spacing" icon="ruler">
+    `pt-10` and `pb-16` for top/bottom padding throughout
+  </Card>
+</CardGroup>
+
+### Key Features
+
+<AccordionGroup>
+  <Accordion title="React Router Integration">
+    Uses `<Outlet />` from React Router to render child routes:
+    
+    ```tsx
+    import { Outlet } from "react-router-dom";
+    
+    <main className="w-full mt-2 flex-1">
+      <Outlet />  {/* Child routes render here */}
+    </main>
+    ```
+    
+    This allows the layout to wrap all pages while each page controls its own content.
+  </Accordion>
+  
+  <Accordion title="Sticky Footer">
+    The footer stays at the bottom of the viewport using flexbox:
+    
+    ```tsx
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-1">...</main>
+      <footer className="mt-auto">...</footer>
+    </div>
+    ```
+    
+    - `flex-1` on main: Takes up available space
+    - `mt-auto` on footer: Pushes footer to bottom
+  </Accordion>
+  
+  <Accordion title="Dynamic Copyright Year">
+    Footer displays current year automatically:
+    
+    ```tsx
+    © {new Date().getFullYear()} | Phillipa Bennett-Eghan
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Navigation Component
+
+The Navbar component provides consistent navigation across all pages with active state highlighting.
+
+### Location
+
+```
+src/custom/nav.tsx
+```
+
+### Implementation
+
+```tsx
+import { NavLink } from "react-router-dom";
+
+const navItems = {
+  "/": { name: "home" },
+  "/projects": { name: "projects" },
+  "/blog": { name: "blog" },
+};
+
+export function Navbar() {
+  return (
+    <aside className="-ml-[8px] mb-12 mt-10">
+      <div className="lg:sticky lg:top-20">
+        <nav className="flex flex-row items-center gap-1 px-0" id="nav">
+          {Object.entries(navItems).map(([path, { name }]) => (
+            <NavLink
+              key={path}
+              to={path}
+              end // important for exact match on "/"
+              className={({ isActive }) =>
+                `relative px-2 py-1 text-[12px] font-medium transition-all duration-200
+                 ${
+                   isActive
+                     ? "bg-[#E1E4EA] text-[#0B0F1F]"
+                     : "text-[#0B0F1F] hover:bg-[#E1E4EA]/60"
+                 }`
+              }
+            >
+              {name}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+    </aside>
+  );
+}
+```
+
+### Features
+
+<Tabs>
+  <Tab title="Active State">
+    NavLink automatically applies active styles based on current route:
+    
+    ```tsx
+    className={({ isActive }) =>
+      isActive
+        ? "bg-[#E1E4EA] text-[#0B0F1F]"      // Active: solid background
+        : "text-[#0B0F1F] hover:bg-[#E1E4EA]/60" // Inactive: hover effect
+    }
+    ```
+    
+    <Note>
+      The `end` prop ensures exact matching for the home route ("/"), preventing it from being active on all routes.
+    </Note>
+  </Tab>
+  
+  <Tab title="Sticky Navigation">
+    On large screens, navigation becomes sticky:
+    
+    ```tsx
+    <div className="lg:sticky lg:top-20">
+      <nav>...</nav>
+    </div>
+    ```
+    
+    - Only active on `lg` breakpoint (1024px+)
+    - Sticks 80px (`top-20`) from viewport top
+    - Mobile: normal flow navigation
+  </Tab>
+  
+  <Tab title="Hover Effects">
+    Smooth hover transitions on inactive links:
+    
+    ```tsx
+    "transition-all duration-200"
+    "hover:bg-[#E1E4EA]/60"  // 60% opacity background on hover
+    ```
+    
+    Creates subtle feedback before navigation.
+  </Tab>
+</Tabs>
+
+### Design Details
+
+<AccordionGroup>
+  <Accordion title="Custom Colors">
+    Navigation uses the portfolio's custom color palette:
+    
+    - **Text**: `#0B0F1F` (dark navy)
+    - **Active Background**: `#E1E4EA` (light gray)
+    - **Hover Background**: `#E1E4EA/60` (60% opacity)
+    
+    These colors are consistent with the overall design system.
+  </Accordion>
+  
+  <Accordion title="Negative Margin Technique">
+    ```tsx
+    className="-ml-[8px]"
+    ```
+    
+    The negative left margin optically aligns the navigation with page content by compensating for the internal padding of nav items.
+  </Accordion>
+  
+  <Accordion title="Typography">
+    - Font size: `text-[12px]` (12px)
+    - Weight: `font-medium` (500)
+    - Lowercase styling for casual, friendly appearance
+  </Accordion>
+</AccordionGroup>
+
+## Page Wrapper Patterns
+
+### Motion Wrapper
+
+All pages use a consistent motion wrapper for page transitions:
+
+```tsx
+import { motion } from "framer-motion";
+
+function HomePage() {
+  return (
+    <motion.div
+      className="w-full"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+    >
+      {/* Page content */}
+    </motion.div>
+  );
+}
+```
+
+**Animation Properties**:
+- **Initial**: Invisible (`opacity: 0`) and 50px down (`y: 50`)
+- **Animate**: Fully visible (`opacity: 1`) at normal position (`y: 0`)
+- **Duration**: 800ms with custom cubic-bezier easing
+- **Easing**: `[0.25, 0.1, 0.25, 1]` for smooth, professional feel
+
+### SEO Wrapper
+
+Pages use React Helmet for dynamic meta tags:
+
+```tsx
+import { Helmet } from "react-helmet-async";
+
+function HomePage() {
+  return (
+    <>
+      <Helmet>
+        <title>abena | swe</title>
+        <meta name="description" content="..." />
+        <meta property="og:title" content="..." />
+        <meta property="og:description" content="..." />
+        <meta property="og:image" content="..." />
+        <meta property="og:url" content="..." />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      
+      {/* Page content */}
+    </>
+  );
+}
+```
+
+<Note>
+  Each page defines its own meta tags for proper SEO and social media sharing. The `react-helmet-async` library ensures server-side rendering compatibility.
+</Note>
+
+## Real-World Examples
+
+### Home Page Structure
+
+```tsx
+// src/pages/home.tsx
+import { Helmet } from "react-helmet-async";
+import { motion } from "framer-motion";
+
+function Home() {
+  return (
+    <>
+      <Helmet>
+        <title>abena | swe</title>
+        <meta name="description" content="..." />
+      </Helmet>
+
+      <motion.div
+        className="w-full"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+      >
+        {/* Hero banner */}
+        <div className="flex justify-start mb-5 hidden md:flex">
+          <div className="inline-flex items-center gap-3 px-1.5 py-0.5 rounded-[2px]">
+            {/* Status indicator */}
+          </div>
+        </div>
+        
+        {/* Introduction */}
+        <p className="text-[16px] font-medium text-[#0B0F1F]">
+          hi, i'm Abena 👋🏿
+        </p>
+        
+        {/* Content sections */}
+      </motion.div>
+    </>
+  );
+}
+```
+
+### Projects Page Structure
+
+```tsx
+// src/pages/projects.tsx
+import { motion } from "framer-motion";
+import { Github, LinkSlant } from "pikaicons";
+import { Helmet } from "react-helmet-async";
+
+function Projects() {
+  const projects = [
+    // Project data array
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>abena | projects</title>
+        <meta name="description" content="things i have built" />
+      </Helmet>
+
+      <motion.div
+        className="w-full"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+      >
+        <p className="text-[16px] font-medium text-[#0B0F1F]">
+          featured projects
+        </p>
+
+        {/* Projects grid with staggered animation */}
+        <div className="mt-6 space-y-6">
+          {projects.map((project, index) => (
+            <motion.article
+              key={project.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,  // Stagger effect
+                ease: "easeOut",
+              }}
+            >
+              {/* Project card content */}
+            </motion.article>
+          ))}
+        </div>
+      </motion.div>
+    </>
+  );
+}
+```
+
+<Accordion title="Staggered Animation Pattern">
+  The projects page uses a stagger effect where each project card animates in sequence:
+  
+  ```tsx
+  delay: index * 0.1  // Each card delayed by 100ms
+  ```
+  
+  This creates a cascading effect:
+  - Card 0: 0ms delay
+  - Card 1: 100ms delay
+  - Card 2: 200ms delay
+  - etc.
+</Accordion>
+
+## Responsive Design
+
+### Breakpoints
+
+The layout uses Tailwind's default breakpoints:
+
+<Tabs>
+  <Tab title="Mobile">
+    **Default (< 768px)**
+    
+    - Full-width content with padding
+    - Normal flow navigation
+    - Simplified layouts
+    
+    ```tsx
+    <div className="px-6">  {/* 24px padding */}
+      <div className="max-w-2xl">  {/* Constrains on larger screens */}
+    ```
+  </Tab>
+  
+  <Tab title="Tablet">
+    **md: 768px+**
+    
+    - Status banner appears: `hidden md:flex`
+    - More horizontal spacing
+    - Enhanced layouts
+    
+    ```tsx
+    <div className="hidden md:flex">
+      {/* Only visible on md+ screens */}
+    </div>
+    ```
+  </Tab>
+  
+  <Tab title="Desktop">
+    **lg: 1024px+**
+    
+    - Sticky navigation: `lg:sticky lg:top-20`
+    - Full feature set
+    - Optimized spacing
+    
+    ```tsx
+    <div className="lg:sticky lg:top-20">
+      <nav>...</nav>
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+### Mobile Optimization
+
+<CardGroup cols={2}>
+  <Card title="Touch Targets" icon="hand-pointer">
+    Navigation items have adequate touch target size (px-2 py-1 + text)
+  </Card>
+  <Card title="Responsive Text" icon="text-size">
+    Text sizes use exact pixel values for consistent rendering
+  </Card>
+  <Card title="Flexible Layout" icon="mobile">
+    Flexbox ensures content adapts to all screen sizes
+  </Card>
+  <Card title="Performance" icon="gauge-high">
+    Minimal layout shifts thanks to defined spacing
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Page Component Template">
+    Use this template when creating new pages:
+    
+    ```tsx
+    import { Helmet } from "react-helmet-async";
+    import { motion } from "framer-motion";
+    
+    function NewPage() {
+      return (
+        <>
+          <Helmet>
+            <title>Page Title | abena</title>
+            <meta name="description" content="..." />
+            {/* OpenGraph tags */}
+          </Helmet>
+          
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            {/* Your page content */}
+          </motion.div>
+        </>
+      );
+    }
+    
+    export default NewPage;
+    ```
+  </Accordion>
+  
+  <Accordion title="Consistent Spacing">
+    Follow the established spacing scale:
+    
+    - Section gaps: `mt-6` or `space-y-6`
+    - Paragraph spacing: `mt-4`
+    - Large section breaks: `mt-12` or `mt-16`
+    - Header to content: `mt-2`
+  </Accordion>
+  
+  <Accordion title="Color Usage">
+    Stick to the defined color palette:
+    
+    - **Primary text**: `text-[#0B0F1F]`
+    - **Muted text**: `text-[#0B0F1F]/80`
+    - **Background accents**: `bg-[#E1E4EA]`
+    - **Borders**: `border-[#0B0F1F]/20`
+  </Accordion>
+</AccordionGroup>
+
+## Related Documentation
+
+<CardGroup cols={3}>
+  <Card title="Component Overview" icon="shapes" href="/components/overview">
+    Learn about the component architecture
+  </Card>
+  <Card title="UI Components" icon="palette" href="/components/ui-components">
+    Explore reusable UI components
+  </Card>
+  <Card title="Getting Started" icon="rocket" href="/quickstart">
+    Set up your development environment
+  </Card>
+</CardGroup>

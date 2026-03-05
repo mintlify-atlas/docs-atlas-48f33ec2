@@ -1,0 +1,363 @@
+---
+title: Blog Posts
+description: Writing and managing MDX blog posts in your portfolio
+---
+
+The portfolio uses MDX for blog posts, allowing you to write content with React components. Posts are stored in `src/pages/blog/` and automatically indexed for the blog listing page.
+
+## MDX Configuration
+
+The project uses `@mdx-js/rollup` with `rehype-prism-plus` for syntax highlighting:
+
+```typescript title="vite.config.ts"
+import mdx from "@mdx-js/rollup";
+import rehypePrism from "rehype-prism-plus";
+
+export default defineConfig({
+  plugins: [
+    react(),
+    mdx({ rehypePlugins: [rehypePrism] }),
+    tailwindcss(),
+  ],
+});
+```
+
+<Note>
+  **rehype-prism-plus** automatically handles code syntax highlighting using Prism themes. No additional configuration needed.
+</Note>
+
+## Blog Post Structure
+
+All blog posts are MDX files located in `src/pages/blog/` with the following structure:
+
+### File Location
+```
+src/pages/blog/
+├── _index.ts           # Auto-indexes all MDX files
+├── reading-times.json  # Generated reading times
+├── recursion.mdx       # Example blog post
+├── pub-sub.mdx         # Example blog post
+└── [slug].tsx          # Dynamic route handler
+```
+
+### Frontmatter Format
+
+Each MDX file starts with a `meta` export containing frontmatter:
+
+```mdx title="recursion.mdx"
+export const meta = {
+  title: "my approach to solving recursive problems",
+  date: "july 14, 2025",
+  tags: ["technical"] 
+}
+
+recursion is a computer science concept that allows you to solve a problem...
+```
+
+<Accordion title="Available Frontmatter Fields">
+  - **title** (required): The post title displayed in listings and the post page
+  - **date** (optional): Display date in any format (e.g., "july 14, 2025", "oct. 28, 2025")
+  - **description** (optional): Meta description for SEO (defaults to "Read this blog post by Abenan.")
+  - **image** (optional): Custom OG image path (defaults to `/og-main.png?v=2`)
+  - **tags** (optional): Array of tags for filtering (e.g., `["technical"]`, `["personal"]`)
+  - **readingTime** (optional): Manual override for reading time (auto-calculated if not provided)
+</Accordion>
+
+## Adding a New Blog Post
+
+<Steps>
+  <Step title="Create MDX file">
+    Create a new `.mdx` file in `src/pages/blog/` with a URL-friendly slug:
+    
+    ```bash
+    touch src/pages/blog/my-new-post.mdx
+    ```
+  </Step>
+
+  <Step title="Add frontmatter">
+    Start your file with the `meta` export:
+    
+    ```mdx
+    export const meta = {
+      title: "my amazing post",
+      date: "dec. 20, 2025",
+      tags: ["technical", "tutorial"]
+    }
+    ```
+  </Step>
+
+  <Step title="Write content">
+    Write your content using standard Markdown with MDX features:
+    
+    ```mdx
+    ## Introduction
+    
+    This is my post content with **bold** and *italic* text.
+    
+    ### Code Examples
+    
+    \`\`\`python
+    def hello_world():
+        print("Hello, World!")
+    \`\`\`
+    
+    You can also use [links](https://example.com) and images!
+    ```
+  </Step>
+
+  <Step title="Regenerate reading times">
+    Run the reading time calculation script:
+    
+    ```bash
+    npm run reading-times
+    ```
+    
+    This updates `src/pages/blog/reading-times.json` with calculated reading times for all posts.
+  </Step>
+
+  <Step title="Verify">
+    Start the dev server and navigate to `/blog` to see your new post:
+    
+    ```bash
+    npm run dev
+    ```
+  </Step>
+</Steps>
+
+## MDX Features
+
+### Code Highlighting
+
+Code blocks are automatically highlighted using `rehype-prism-plus`:
+
+```python
+# Python example with syntax highlighting
+def find_sum(lst):
+    if not lst:
+        return 0
+    return lst[0] + find_sum(lst[1:])
+```
+
+```typescript
+// TypeScript example
+interface BlogPost {
+  slug: string;
+  meta: {
+    title: string;
+    date?: string;
+    tags?: string[];
+  };
+}
+```
+
+### Markdown Features
+
+All standard Markdown features are supported:
+
+- **Bold text** with `**text**`
+- *Italic text* with `*text*`
+- [Links](https://example.com) with `[text](url)`
+- Inline code with `` `code` ``
+- Lists (ordered and unordered)
+- Blockquotes with `>`
+- Headings with `#`, `##`, `###`
+
+### Links Between Posts
+
+Link to other blog posts using relative URLs:
+
+```mdx
+For more details, see [a deeper dive into pub/sub](/blog/pub-sub-deeper-dive).
+```
+
+## Reading Time Calculation
+
+Reading times are automatically calculated by `scripts/reading-times.mjs`:
+
+```javascript title="scripts/reading-times.mjs"
+const WORDS_PER_MINUTE = 200;
+
+function getReadingTimeMinutes(rawContent) {
+  // Remove meta export
+  const withoutMeta = rawContent.replace(
+    /export const meta\s*=\s*\{[\s\S]*?\};?\s*/gi, 
+    ''
+  ).trim();
+  
+  // Remove code blocks
+  const withoutCodeBlocks = withoutMeta.replace(/```[\s\S]*?```/g, ' ');
+  
+  // Count words
+  const words = withoutCodeBlocks.split(/\s+/).filter(Boolean).length;
+  
+  return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
+}
+```
+
+<Note>
+  Reading times are calculated at **200 words per minute** and exclude code blocks and frontmatter.
+</Note>
+
+### Running the Script
+
+The script is defined in `package.json`:
+
+```bash
+npm run reading-times
+```
+
+This generates `src/pages/blog/reading-times.json`:
+
+```json
+{
+  "recursion": 2,
+  "pub-sub": 1,
+  "pub-sub-deeper-dive": 4
+}
+```
+
+## Blog Listing Page
+
+The blog listing page (`src/pages/blog/index.tsx`) automatically displays all posts:
+
+### Features
+
+- **Automatic indexing**: Posts are imported from `_index.ts` using Vite's `import.meta.glob`
+- **Date sorting**: Posts are sorted by date (newest first)
+- **Tag filtering**: Filter posts by tags using the tag buttons
+- **Reading time display**: Shows reading time next to each post
+
+### Post Index System
+
+Posts are automatically indexed in `src/pages/blog/_index.ts`:
+
+```typescript
+const modules = import.meta.glob<MdxModule>('./*.mdx', { eager: true });
+const readingTimes: Record<string, number> = readingTimesData;
+
+const posts: BlogPost[] = Object.entries(modules).map(([path, mod]) => {
+  const slug = path.split('/').pop()?.replace(/\.mdx$/, '') || '';
+  const readingTime = mod.meta.readingTime ?? readingTimes[slug];
+
+  return {
+    slug,
+    meta: { ...mod.meta, readingTime },
+    component: mod.default,
+  };
+});
+```
+
+<Accordion title="How Auto-Indexing Works">
+  1. `import.meta.glob` loads all `.mdx` files in the directory
+  2. Each file's frontmatter is extracted from the `meta` export
+  3. The filename becomes the post slug
+  4. Reading times are merged from `reading-times.json`
+  5. Posts are exported as an array for the listing page
+</Accordion>
+
+## Dynamic Post Routing
+
+Individual posts are rendered via `src/pages/blog/[slug].tsx`:
+
+```typescript
+export default function BlogPost() {
+  const { slug } = useParams();
+  const post = posts.find((p) => p.slug === slug);
+  
+  if (!post) return <p>post not found 😢</p>;
+  
+  const PostComponent = post.component;
+  const { title, description, date, image, readingTime } = post.meta;
+  
+  return (
+    <article className="prose">
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+      </Helmet>
+      
+      <h2>{title}</h2>
+      <p className="blog-meta">
+        {date}
+        {readingTime != null && <span>{readingTime} min read</span>}
+      </p>
+      
+      <PostComponent />
+    </article>
+  );
+}
+```
+
+### SEO Features
+
+- **Dynamic meta tags**: Title and description from frontmatter
+- **Open Graph images**: Custom or default OG images
+- **Canonical URLs**: Proper canonical links for SEO
+- **Twitter Cards**: Social media preview support
+
+## Comments with Giscus
+
+Blog posts include a Giscus comment section powered by GitHub Discussions:
+
+```typescript
+useEffect(() => {
+  const script = document.createElement("script");
+  script.src = "https://giscus.app/client.js";
+  script.setAttribute("data-repo", "abena07/bennett-eghan");
+  script.setAttribute("data-mapping", "pathname");
+  // ... more attributes
+  
+  document.getElementById("giscus-comments")?.appendChild(script);
+}, [slug, post]);
+```
+
+<Note>
+  Comments are loaded dynamically per post using the pathname mapping, ensuring each post has its own discussion thread.
+</Note>
+
+## Styling
+
+Blog posts use Tailwind's typography plugin (`prose` classes):
+
+```tsx
+<article className="prose prose-p:text-[14px] prose-li:text-[14px] prose-sm max-w-3xl">
+  <PostComponent />
+</article>
+```
+
+The `prose` classes automatically style:
+- Headings
+- Paragraphs
+- Lists
+- Code blocks
+- Links
+- Blockquotes
+
+## Best Practices
+
+<Accordion title="Writing Guidelines">
+  - **Keep titles lowercase**: The portfolio uses a lowercase aesthetic (e.g., "my approach to solving recursive problems")
+  - **Use tags consistently**: Stick to a few key tags like `["technical"]`, `["personal"]`
+  - **Date format**: Use readable formats like "july 14, 2025" or "oct. 28, 2025"
+  - **Code examples**: Include practical, working code snippets
+  - **Internal links**: Link between related posts for better navigation
+</Accordion>
+
+<Accordion title="Performance Tips">
+  - **Optimize images**: Compress images before adding to blog posts
+  - **Limit code blocks**: Long code blocks increase reading time calculations
+  - **Use lazy loading**: Large images should use lazy loading attributes
+  - **Regenerate reading times**: Always run `npm run reading-times` after content changes
+</Accordion>
+
+## Example Posts
+
+The portfolio includes several example posts:
+
+- **recursion.mdx**: Technical post with code examples and references
+- **pub-sub.mdx**: Short explainer with links to deeper content
+- **pub-sub-deeper-dive.mdx**: In-depth tutorial with live examples
+- **oss.mdx**: Personal reflection on open source
+- **navigating-the-tech-space-as-a-woman.mdx**: Personal essay
+
+Study these posts to understand the content style and structure used throughout the portfolio.

@@ -1,0 +1,187 @@
+---
+title: Component Overview
+description: React component architecture overview for the Bennett Eghan portfolio
+---
+
+The portfolio is built with a clean, well-organized React + TypeScript component architecture that separates concerns between pages, reusable UI components, and custom features.
+
+## Directory Structure
+
+The component architecture follows a three-tier organization:
+
+```
+src/
+├── pages/              # Top-level page components
+│   ├── home.tsx
+│   ├── projects.tsx
+│   ├── layout.tsx
+│   └── blog/
+│       ├── index.tsx
+│       └── [slug].tsx
+├── components/         # Reusable UI components
+│   └── ui/
+│       └── button.tsx
+└── custom/            # Custom feature components
+    └── nav.tsx
+```
+
+## Component Categories
+
+<CardGroup cols={3}>
+  <Card title="Pages" icon="file" iconType="duotone">
+    Top-level route components that define page structure and content
+  </Card>
+  <Card title="UI Components" icon="shapes" iconType="duotone">
+    Reusable, styled components following design system patterns
+  </Card>
+  <Card title="Custom" icon="wand-magic-sparkles" iconType="duotone">
+    Application-specific components with business logic
+  </Card>
+</CardGroup>
+
+## Design Patterns
+
+### Component Composition
+
+The portfolio uses React composition patterns to build complex UIs from simple, reusable pieces:
+
+```tsx
+import { Layout } from "@/pages/layout";
+import { Navbar } from "@/custom/nav";
+import { Button } from "@/components/ui/button";
+
+// Layout wraps all pages and provides consistent structure
+function App() {
+  return (
+    <Layout>
+      <Navbar />
+      {/* Page content */}
+    </Layout>
+  );
+}
+```
+
+### Type Safety
+
+All components are built with TypeScript for complete type safety:
+
+```tsx
+type BannerTheme = "swe" | "sports" | "hxi";
+
+const bannerConfig: Record<BannerTheme, BannerConfig> = {
+  swe: {
+    text: "breaking, building & engineering things",
+    bgColor: "bg-[#CECEDC]",
+    // ...
+  },
+};
+```
+
+### Variant-Based Styling
+
+UI components use `class-variance-authority` (CVA) for type-safe variant-based styling:
+
+```tsx
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground",
+        destructive: "bg-destructive text-white",
+        outline: "border bg-background",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 gap-1.5 px-3",
+        lg: "h-10 px-6",
+      },
+    },
+  }
+);
+```
+
+## Import Patterns
+
+The portfolio uses TypeScript path aliases for clean imports:
+
+<CodeGroup>
+
+```tsx UI Components
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+```
+
+```tsx Custom Components
+import { Navbar } from "@/custom/nav";
+```
+
+```tsx Pages
+import { Layout } from "@/pages/layout";
+```
+
+</CodeGroup>
+
+<Note>
+  The `@/` prefix is configured in `tsconfig.json` to map to the `src/` directory, enabling absolute imports throughout the codebase.
+</Note>
+
+## Animation & Motion
+
+Components leverage Framer Motion for smooth, performant animations:
+
+```tsx
+import { motion } from "framer-motion";
+
+function Home() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+    >
+      {/* Content */}
+    </motion.div>
+  );
+}
+```
+
+<Accordion title="Common Animation Patterns">
+  - **Page transitions**: `opacity: 0 → 1` with `y: 50 → 0` slide-up effect
+  - **Staggered lists**: Sequential delays using `index * 0.1` for cascade effect
+  - **Hover states**: CSS transitions for underline effects and opacity changes
+  - **Pulse animations**: CSS `animate-pulse` for status indicators
+</Accordion>
+
+## SEO & Meta Tags
+
+Pages use `react-helmet-async` for dynamic meta tag management:
+
+```tsx
+import { Helmet } from "react-helmet-async";
+
+function Home() {
+  return (
+    <>
+      <Helmet>
+        <title>abena | swe</title>
+        <meta name="description" content="hi, i'm Abena..." />
+        <meta property="og:title" content="Abena — swe" />
+        <meta property="og:image" content="https://..." />
+      </Helmet>
+      {/* Page content */}
+    </>
+  );
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="UI Components" icon="shapes" href="/components/ui-components">
+    Explore reusable UI components and their props
+  </Card>
+  <Card title="Layout Components" icon="layer-group" href="/components/layout">
+    Learn about layout structure and navigation
+  </Card>
+</CardGroup>

@@ -1,0 +1,312 @@
+---
+title: Tailwind Configuration
+description: Tailwind CSS v4 setup and configuration with custom plugins
+---
+
+## Overview
+
+The portfolio uses **Tailwind CSS v4** with the new Vite plugin architecture, providing a modern, performant styling system. The configuration leverages custom plugins for typography and animations while maintaining a minimal, clean setup.
+
+## Dependencies
+
+```json package.json
+{
+  "dependencies": {
+    "@tailwindcss/vite": "^4.0.14",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
+    "tailwindcss": "^4.0.14"
+  }
+}
+```
+
+## Vite Plugin Setup
+
+Tailwind CSS v4 integrates directly with Vite using the `@tailwindcss/vite` plugin:
+
+```typescript vite.config.ts
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(), // Tailwind CSS v4 Vite plugin
+    // ... other plugins
+  ],
+});
+```
+
+<Note>
+Tailwind CSS v4 uses a new plugin architecture with `@tailwindcss/vite` that replaces the traditional PostCSS setup.
+</Note>
+
+## CSS Import Configuration
+
+The main CSS file imports Tailwind and registers plugins using the new v4 syntax:
+
+```css src/index.css
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+```
+
+### Plugin Details
+
+<CardGroup cols={2}>
+  <Card title="tailwindcss-animate" icon="sparkles">
+    Provides animation utilities like `animate-pulse` used throughout the project
+  </Card>
+  <Card title="@tailwindcss/typography" icon="text">
+    Adds prose classes for styled markdown content in blog posts
+  </Card>
+</CardGroup>
+
+## Theme Configuration
+
+The project uses Tailwind v4's `@theme` directive for custom configuration:
+
+```css src/index.css
+@theme {
+  --font-sans: "IBM Plex Mono", "Source Sans 3", ui-monospace, monospace;
+}
+
+@theme inline {
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  /* Color tokens defined as CSS variables */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  /* ... additional color mappings */
+}
+```
+
+### Border Radius
+
+All border radius values are set to **4px** using the `rounded-[4px]` utility. The theme overrides default radius tokens to 0, requiring explicit values:
+
+```tsx Example Usage
+<div className="rounded-[4px] bg-[#E1E4EA]">
+  {/* Project card with 4px border radius */}
+</div>
+```
+
+## Commonly Used Utilities
+
+Based on the source code analysis, here are the most frequently used Tailwind utilities:
+
+### Layout & Spacing
+
+```tsx
+// Flexbox layouts
+<div className="flex items-center gap-2.5">
+<div className="flex flex-col gap-2">
+<div className="inline-flex items-center gap-3">
+
+// Spacing
+<div className="px-6 pb-6 pt-1">
+<div className="mt-4 mb-5">
+<div className="space-y-6">
+```
+
+### Typography
+
+```tsx
+// Font sizes (explicit px values)
+<p className="text-[16px] font-medium">
+<div className="text-[14px] leading-relaxed">
+<span className="text-[12px] font-medium uppercase tracking-wide">
+
+// Font weights
+<span className="font-medium">
+<span className="font-semibold">
+<span className="font-bold">
+<span className="font-mono">
+```
+
+<Note>
+The project uses explicit pixel values (e.g., `text-[16px]`) instead of Tailwind's default scale (e.g., `text-base`).
+</Note>
+
+### Colors
+
+```tsx
+// Background colors
+<div className="bg-[#CECEDC]">
+<div className="bg-[#E1E4EA]">
+<div className="bg-[#0B0F1F]">
+
+// Text colors with opacity
+<span className="text-[#0B0F1F]">
+<span className="text-[#0B0F1F]/80">
+<span className="text-[#0B0F1F]/50">
+
+// Border colors
+<div className="border border-[#0B0F1F]/20">
+```
+
+### Animations
+
+```tsx
+// Pulse animation from tailwindcss-animate
+<div className="animate-pulse" />
+
+// Transitions
+<div className="transition-colors duration-300">
+<a className="hover:opacity-70 transition">
+```
+
+### Responsive Design
+
+```tsx
+// Breakpoint usage
+<div className="hidden md:flex">
+<div className="flex-col sm:flex-row sm:items-start">
+<span className="hidden sm:inline ml-1.5">
+```
+
+## Custom Variants
+
+The project defines a custom dark mode variant:
+
+```css
+@custom-variant dark (&:is(.dark *));
+```
+
+This enables dark mode styling with the `dark:` prefix when a parent has the `.dark` class.
+
+## Base Layer Styles
+
+The project applies global base styles:
+
+```css src/index.css
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    font-size: 14px; /* Base font size */
+  }
+
+  html,
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+```
+
+<Warning>
+The base font size is **14px**, not the default 16px. This affects all relative units (rem, em).
+</Warning>
+
+## Extending the Configuration
+
+To extend Tailwind CSS v4 configuration:
+
+### Adding Custom Colors
+
+Define color variables in `:root` and map them in `@theme inline`:
+
+```css src/index.css
+:root {
+  --my-custom-color: oklch(0.5 0.2 180);
+}
+
+@theme inline {
+  --color-custom: var(--my-custom-color);
+}
+```
+
+Then use with `bg-custom`, `text-custom`, etc.
+
+### Adding Custom Utilities
+
+Use Tailwind's arbitrary values or define custom CSS:
+
+```tsx
+{/* Arbitrary values */}
+<div className="w-[420px] h-[calc(100vh-80px)]" />
+
+{/* Custom CSS in component */}
+<style>{`
+  .hover-underline::after {
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+`}</style>
+```
+
+### Adding Plugins
+
+Install the plugin and register it in `src/index.css`:
+
+```bash
+bun add @tailwindcss/forms
+```
+
+```css src/index.css
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms"; /* New plugin */
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use Explicit Color Values">
+    The project uses hex colors with the arbitrary value syntax:
+    
+    ```tsx
+    <div className="bg-[#E1E4EA] text-[#0B0F1F]">
+    ```
+    
+    This ensures color consistency across the design system.
+  </Accordion>
+
+  <Accordion title="Leverage Opacity Modifiers">
+    Use Tailwind's opacity syntax for color variations:
+    
+    ```tsx
+    <span className="text-[#0B0F1F]/80"> {/* 80% opacity */}
+    <div className="border-[#0B0F1F]/20">  {/* 20% opacity */}
+    ```
+  </Accordion>
+
+  <Accordion title="Maintain Consistent Spacing">
+    The project uses a consistent spacing scale:
+    
+    - Small gaps: `gap-2`, `gap-2.5`, `gap-3`
+    - Component spacing: `px-6`, `py-0.5`, `mt-4`
+    - Section spacing: `mt-6`, `space-y-6`, `mt-16`
+  </Accordion>
+
+  <Accordion title="Responsive Mobile-First">
+    Follow mobile-first responsive design:
+    
+    ```tsx
+    <div className="flex-col sm:flex-row md:items-start">
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Design System" icon="palette" href="/styling/design-system">
+    Explore the color palette, typography, and design tokens
+  </Card>
+  <Card title="UI Components" icon="layer-group" href="/components/ui-components">
+    See how components use Tailwind classes
+  </Card>
+</CardGroup>

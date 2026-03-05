@@ -1,0 +1,653 @@
+---
+title: Design System
+description: Color palette, typography, spacing, and component styling patterns
+---
+
+## Overview
+
+The portfolio uses a minimal, monochrome design system with carefully chosen colors, typography, and spacing. The aesthetic emphasizes clarity, readability, and a technical feel through monospace fonts and subtle gradients.
+
+## Color Palette
+
+### Primary Colors
+
+The core color palette consists of grayscale tones with specific hex values:
+
+<CodeGroup>
+```tsx Primary Color
+#0e2544 // Deep navy - Primary brand color (specified but not actively used)
+```
+
+```tsx Dark Text
+#0B0F1F // Near-black - Primary text color
+// Used for: headings, body text, icons
+```
+
+```tsx Light Neutral
+#84949d // Medium gray - Light accent (specified)
+```
+
+```tsx Dark Neutral  
+#c9cdd3 // Light gray - Dark accent (specified)
+```
+
+```tsx Accent
+#8a8fa3 // Blue-gray - Accent color (specified)
+```
+</CodeGroup>
+
+### Background Colors
+
+Multiple background colors create visual hierarchy:
+
+```tsx Background Palette
+#ffffff  // White - Main background
+#E1E4EA  // Light gray - Project cards
+#CECEDC  // Slightly darker gray - Banner backgrounds
+#0B0F1F  // Near-black - Code blocks, dark elements
+```
+
+### Usage Examples
+
+<Tabs>
+  <Tab title="Main Layout">
+    ```tsx src/pages/layout.tsx
+    <div className="min-h-screen flex flex-col items-center px-6 w-full">
+      {/* White background (#ffffff) from :root */}
+      <div className="w-full max-w-2xl flex flex-col pt-10 pb-16 min-h-screen">
+        <Navbar />
+        <main className="w-full mt-2 flex-1">
+          <Outlet />
+        </main>
+        <footer className="text-[12px] text-[#0B0F1F]/80">
+          {/* Text with 80% opacity */}
+        </footer>
+      </div>
+    </div>
+    ```
+  </Tab>
+  
+  <Tab title="Banner Component">
+    ```tsx src/pages/home.tsx
+    <div className="inline-flex items-center gap-3 px-1.5 py-0.5 rounded-[2px] bg-[#CECEDC] border border-[#0B0F1F]/20">
+      <div className="w-2.5 h-2.5 rounded-[2px] bg-[#0B0F1F] animate-pulse" />
+      <span className="text-[12px] font-medium text-[#0B0F1F]">
+        i'm currently{" "}
+        <span className="font-semibold text-[#0B0F1F]">
+          breaking, building & engineering things
+        </span>
+      </span>
+    </div>
+    ```
+  </Tab>
+  
+  <Tab title="Project Cards">
+    ```tsx src/pages/projects.tsx
+    <article className="overflow-hidden rounded-[4px] bg-[#E1E4EA]">
+      {/* Decorative graphic strip */}
+      <div
+        className="h-24 w-full opacity-30"
+        style={{
+          backgroundImage: `repeating-linear-gradient(
+            0deg,
+            #0B0F1F 0px,
+            #0B0F1F 1px,
+            transparent 1px,
+            transparent 4px
+          )`,
+        }}
+      />
+      {/* Card content */}
+      <div className="px-6 pb-6 pt-1">
+        <h3 className="text-[14px] font-bold text-[#0B0F1F]">
+          {project.title}
+        </h3>
+      </div>
+    </article>
+    ```
+  </Tab>
+</Tabs>
+
+### Opacity Modifiers
+
+Colors are frequently modified with opacity for subtle effects:
+
+```tsx Opacity Patterns
+// Text colors
+text-[#0B0F1F]      // 100% - Primary text
+text-[#0B0F1F]/80   // 80%  - Secondary text (footer, metadata)
+text-[#0B0F1F]/50   // 50%  - Separator dots
+
+// Border colors
+border-[#0B0F1F]/20 // 20%  - Subtle borders on banners/cards
+```
+
+<Note>
+Tailwind's opacity modifier syntax (`/80`, `/50`, `/20`) is used extensively instead of defining separate color values.
+</Note>
+
+## Typography
+
+### Font Family
+
+The portfolio uses **IBM Plex Mono** as the primary monospace font:
+
+```css src/index.css
+@theme {
+  --font-sans: "IBM Plex Mono", "Source Sans 3", ui-monospace, monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+```
+
+<Warning>
+Despite the CSS variable name `--font-sans`, the font stack is actually monospace. This creates a technical, code-like aesthetic.
+</Warning>
+
+### Font Sizes
+
+The project uses explicit pixel values with a **14px base size**:
+
+```tsx Typography Scale
+// Base HTML font size
+html { font-size: 14px; }
+
+// Component font sizes (from source code analysis)
+text-[16px] // Large headings ("hi, i'm Abena", "featured projects")
+text-[14px] // Body text, project descriptions, navigation
+text-[12px] // Small text, metadata, tags, footer
+```
+
+### Font Weights
+
+```tsx Weight Classes
+font-medium   // 500 - Standard text emphasis
+font-semibold // 600 - Secondary headings
+font-bold     // 700 - Primary headings, emphasized links
+font-mono     // Monospace variant for tech stack tags
+```
+
+### Typography Examples
+
+<Tabs>
+  <Tab title="Headings">
+    ```tsx
+    {/* Page heading */}
+    <p className="text-[16px] font-medium text-[#0B0F1F]">
+      hi, i'm Abena 👋🏿
+    </p>
+
+    {/* Section heading */}
+    <p className="text-[16px] font-medium text-[#0B0F1F]">
+      featured projects
+    </p>
+
+    {/* Card title */}
+    <h3 className="text-[14px] font-bold text-[#0B0F1F] capitalize">
+      {project.title}
+    </h3>
+    ```
+  </Tab>
+  
+  <Tab title="Body Text">
+    ```tsx
+    {/* Paragraph */}
+    <div className="text-[14px] mt-4 leading-relaxed text-black">
+      i'm a <span className="text-[#0B0F1F] font-bold">swe</span> from
+      ghana 🇬🇭 & i enjoy building software.
+    </div>
+
+    {/* Project description */}
+    <p className="text-[12px] leading-relaxed text-[#0B0F1F] mt-3">
+      {project.description}
+    </p>
+    ```
+  </Tab>
+  
+  <Tab title="Metadata">
+    ```tsx
+    {/* Project type badge */}
+    <span className="text-[12px] font-medium uppercase tracking-wide text-[#0B0F1F]/80">
+      {project.type}
+    </span>
+
+    {/* Footer */}
+    <footer className="text-[12px] text-[#0B0F1F]/80">
+      © {new Date().getFullYear()} | Phillipa Bennett-Eghan
+    </footer>
+
+    {/* Tech stack tags */}
+    <div className="flex flex-wrap items-center gap-2 text-[12px] text-[#0B0F1F]/80">
+      {project.tech.map((t) => (
+        <span className="font-mono">{t}</span>
+      ))}
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+### Blog Typography
+
+Blog posts use Tailwind Typography plugin with custom styling:
+
+```css src/index.css
+/* Blog content */
+.blog-post.prose {
+  font-size: 14px;
+}
+
+.blog-post.prose h1,
+.blog-post.prose h2,
+.blog-post.prose h3,
+.blog-post.prose h4 {
+  font-size: 1rem;   /* 14px (relative to base) */
+  font-weight: 600;
+}
+
+/* Metadata */
+.blog-meta {
+  font-size: 12px;
+  color: #888888;
+}
+```
+
+## Spacing & Layout
+
+### Container Layout
+
+The main layout uses a centered column with max-width:
+
+```tsx src/pages/layout.tsx
+<div className="min-h-screen flex flex-col items-center px-6 w-full">
+  {/* Centered content container - max 672px (max-w-2xl) */}
+  <div className="w-full max-w-2xl flex flex-col pt-10 pb-16 min-h-screen">
+    <Navbar />
+    <main className="w-full mt-2 flex-1">
+      <Outlet />
+    </main>
+    <footer className="mt-auto pt-8">...</footer>
+  </div>
+</div>
+```
+
+### Spacing Scale
+
+The project uses consistent spacing values:
+
+```tsx Spacing Patterns
+// Micro spacing (component internals)
+gap-2      // 8px  - Small gaps between items
+gap-2.5    // 10px - Medium gaps
+gap-3      // 12px - Larger gaps
+px-1.5     // 6px  - Banner horizontal padding
+py-0.5     // 2px  - Banner vertical padding
+
+// Component spacing
+px-6       // 24px - Card padding horizontal
+pb-6       // 24px - Card padding bottom
+pt-1       // 4px  - Card padding top
+mt-4       // 16px - Paragraph spacing
+mb-5       // 20px - Section spacing
+
+// Section spacing
+mt-6       // 24px - Project grid top margin
+mt-16      // 64px - Large section breaks
+space-y-6  // 24px - Vertical spacing between cards
+pt-10      // 40px - Main layout top padding
+pb-16      // 64px - Main layout bottom padding
+```
+
+### Responsive Breakpoints
+
+```tsx Responsive Patterns
+// Mobile-first approach
+flex-col                      // Mobile: stack vertically
+sm:flex-row                   // ≥640px: row layout
+md:flex                       // ≥768px: show element
+
+// Common patterns
+hidden md:flex                // Hide on mobile, show on tablet+
+hidden sm:inline              // Hide text on mobile, show on small+
+flex-col sm:flex-row sm:items-start sm:justify-between
+```
+
+## Component Patterns
+
+### Cards
+
+Project cards follow a consistent pattern:
+
+```tsx Project Card Pattern
+<article className="overflow-hidden rounded-[4px] bg-[#E1E4EA]">
+  {/* Decorative header */}
+  <div className="h-24 w-full opacity-30"
+       style={{ backgroundImage: `repeating-linear-gradient(...)` }} />
+  
+  {/* Content */}
+  <div className="px-6 pb-6 pt-1">
+    <h3 className="text-[14px] font-bold text-[#0B0F1F] capitalize">
+      Title
+    </h3>
+    <span className="text-[12px] font-medium uppercase tracking-wide text-[#0B0F1F]/80">
+      Category
+    </span>
+    <p className="text-[12px] leading-relaxed text-[#0B0F1F] mt-3">
+      Description
+    </p>
+  </div>
+</article>
+```
+
+**Key characteristics:**
+- Border radius: `4px`
+- Background: `#E1E4EA`
+- Decorative gradient strip at top (30% opacity)
+- Consistent padding: `px-6 pb-6 pt-1`
+
+### Buttons & Links
+
+The project uses styled links with hover effects:
+
+```tsx Link Patterns
+{/* Link with custom underline animation */}
+<a className="text-[#0B0F1F] font-bold hover-underline cursor-pointer">
+  link text
+</a>
+
+{/* Icon link with opacity transition */}
+<a className="text-[#0B0F1F] hover:opacity-70 transition">
+  <Github width={22} height={22} />
+</a>
+
+{/* Inline text link */}
+<a className="text-[#0B0F1F] hover:underline font-medium">
+  github
+</a>
+```
+
+Custom underline animation:
+
+```css Hover Underline
+.hover-underline {
+  position: relative;
+  display: inline-block;
+}
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.hover-underline:hover::after {
+  transform: scaleX(1);
+}
+```
+
+### Banners
+
+Status banners with animated indicators:
+
+```tsx Banner Pattern
+<div className="inline-flex items-center gap-3 px-1.5 py-0.5 rounded-[2px] bg-[#CECEDC] border border-[#0B0F1F]/20 transition-colors duration-300">
+  {/* Animated dot */}
+  <div className="w-2.5 h-2.5 rounded-[2px] bg-[#0B0F1F] animate-pulse" />
+  
+  {/* Text content */}
+  <span className="text-[12px] font-medium text-[#0B0F1F]">
+    i'm currently <span className="font-semibold">status text</span>
+  </span>
+</div>
+```
+
+**Features:**
+- Animated pulse dot (`animate-pulse` from tailwindcss-animate)
+- 2px border radius
+- Subtle border with 20% opacity
+- Smooth color transitions (300ms)
+
+### Borders
+
+All rounded corners use **4px** radius:
+
+```tsx Border Radius
+rounded-[2px]  // Small elements (banners, dots)
+rounded-[4px]  // Cards, containers
+```
+
+## Animations
+
+### Motion (Framer Motion)
+
+Page and component animations use the `motion` library:
+
+```tsx Page Animation Pattern
+import { motion } from "framer-motion";
+
+<motion.div
+  className="w-full"
+  initial={{ opacity: 0, y: 50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+>
+  {/* Page content */}
+</motion.div>
+```
+
+```tsx Staggered Item Animation
+{projects.map((project, index) => (
+  <motion.article
+    key={project.title}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{
+      duration: 0.5,
+      delay: index * 0.1,  // Stagger effect
+      ease: "easeOut",
+    }}
+  >
+    {/* Card content */}
+  </motion.article>
+))}
+```
+
+**Animation parameters:**
+- Page entrance: `y: 50`, `duration: 0.8s`, custom cubic-bezier easing
+- Card entrance: `y: 20`, `duration: 0.5s`, stagger delay `0.1s`
+- Easing: Custom `[0.25, 0.1, 0.25, 1]` or `"easeOut"`
+
+### CSS Animations
+
+```tsx Pulse Animation
+{/* From tailwindcss-animate plugin */}
+<div className="animate-pulse" />
+```
+
+```tsx Transition Classes
+<div className="transition-colors duration-300">
+<a className="hover:opacity-70 transition">
+<a className="hover:underline">
+```
+
+## Code Block Styling
+
+Blog code blocks use custom syntax highlighting:
+
+```css Code Block Styling
+.prose pre {
+  font-family: "DM Mono", ui-monospace, monospace !important;
+  background-color: #0d1117 !important; /* GitHub Dark */
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #c9d1d9;
+}
+
+/* Inline code */
+.prose :not(pre) > code {
+  font-family: "DM Mono", ui-monospace, monospace !important;
+  background-color: #0d1117;
+  padding: 0.2em 0.4em;
+  font-size: 0.875em;
+  color: #c9d1d9;
+}
+```
+
+**Features:**
+- Font: **DM Mono** (different from main text)
+- Theme: GitHub Dark Colorblind colors
+- Syntax: Powered by rehype-prism-plus
+- No backticks on inline code (removed via CSS)
+
+## Icon Styling
+
+Icons from the `pikaicons` library are styled globally:
+
+```css Global Icon Styling
+.pika-icon path {
+  stroke: #0B0F1F; /* Match primary text color */
+}
+```
+
+```tsx Icon Usage
+import { Github, Linkedin, MessageDefault, LinkSlant } from "pikaicons";
+
+<Github width={20} height={20} className="pika-icon shrink-0 inline-block" />
+<Github width={22} height={22} className="pika-icon shrink-0 inline-block" />
+```
+
+**Sizes:**
+- Navigation/small links: `20x20`
+- Project cards: `22x22`
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Maintain Visual Hierarchy">
+    Use the established font size scale:
+    - **16px**: Primary headings
+    - **14px**: Body text, descriptions
+    - **12px**: Metadata, tags, footer
+    
+    Use font weights to emphasize:
+    - **bold**: Primary headings, key terms
+    - **semibold**: Secondary headings
+    - **medium**: Standard text
+  </Accordion>
+
+  <Accordion title="Use Consistent Spacing">
+    Follow the project's spacing patterns:
+    - Small gaps: `gap-2` to `gap-3`
+    - Component spacing: `mt-4`, `px-6`
+    - Section breaks: `mt-16`, `space-y-6`
+  </Accordion>
+
+  <Accordion title="Stick to the Color Palette">
+    Use the defined colors with opacity modifiers:
+    ```tsx
+    text-[#0B0F1F]      // Primary
+    text-[#0B0F1F]/80   // Secondary
+    bg-[#E1E4EA]        // Card background
+    bg-[#CECEDC]        // Banner background
+    ```
+  </Accordion>
+
+  <Accordion title="Apply Border Radius Consistently">
+    Use 4px for all rounded elements:
+    ```tsx
+    rounded-[4px]  // Standard
+    rounded-[2px]  // Small elements only
+    ```
+  </Accordion>
+
+  <Accordion title="Animate Thoughtfully">
+    Use motion for page transitions and staggered lists:
+    - Page entrance: fade up from `y: 50`
+    - List items: stagger with `delay: index * 0.1`
+    - Hover states: opacity transitions
+  </Accordion>
+</AccordionGroup>
+
+## Design Tokens Reference
+
+<CodeGroup>
+```tsx Colors
+// Backgrounds
+#ffffff  // Main background
+#E1E4EA  // Card background  
+#CECEDC  // Banner background
+#0B0F1F  // Dark background
+
+// Text
+#0B0F1F     // Primary text (100%)
+#0B0F1F/80  // Secondary text (80%)
+#0B0F1F/50  // Tertiary text (50%)
+#0B0F1F/20  // Border color (20%)
+```
+
+```tsx Typography
+// Font Family
+font-family: "IBM Plex Mono", "Source Sans 3", ui-monospace, monospace
+
+// Font Sizes
+text-[16px]  // Headings
+text-[14px]  // Body
+text-[12px]  // Metadata
+
+// Font Weights
+font-bold     // 700
+font-semibold // 600
+font-medium   // 500
+font-mono     // Monospace variant
+```
+
+```tsx Spacing
+// Gaps
+gap-2    // 8px
+gap-2.5  // 10px
+gap-3    // 12px
+
+// Padding
+px-6     // 24px horizontal
+pb-6     // 24px bottom
+pt-1     // 4px top
+
+// Margins
+mt-4     // 16px
+mt-6     // 24px
+mt-16    // 64px
+```
+
+```tsx Effects
+// Border Radius
+rounded-[4px]  // Standard
+rounded-[2px]  // Small
+
+// Transitions
+transition-colors duration-300
+transition (default)
+animate-pulse
+
+// Opacity
+hover:opacity-70
+opacity-30
+```
+</CodeGroup>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Tailwind Configuration" icon="wrench" href="/styling/tailwind-config">
+    Learn about the Tailwind CSS v4 setup and configuration
+  </Card>
+  <Card title="Components" icon="puzzle-piece" href="/components/overview">
+    Explore reusable components built with this design system
+  </Card>
+</CardGroup>

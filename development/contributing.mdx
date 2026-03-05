@@ -1,0 +1,173 @@
+---
+title: "Contributing"
+description: "How to contribute to the project or fork it for personal use"
+---
+
+## Overview
+
+This project is open source and welcomes contributions. Whether you want to contribute improvements back to the project or fork it for your own personal portfolio, this guide will help you get started.
+
+<Warning>
+If you're forking this project for your own use, **please remove all personal content** including resume, blog posts, images, and other personal information before deploying.
+</Warning>
+
+## Getting Started
+
+### Forking vs Contributing
+
+- **Forking**: Clone the project for your own portfolio site. Remove Bennett's personal content and replace it with your own.
+- **Contributing**: Submit improvements, bug fixes, or new features back to the original project via pull requests.
+
+### Development Setup
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/abena07/bennett-eghan.git
+    cd bennett-eghan
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    This project uses **Bun 1.1.38** as the package manager:
+    
+    ```bash
+    bun install
+    ```
+    
+    <Note>
+    The README mentions `yarn`, but the project is configured to use Bun as specified in `package.json`.
+    </Note>
+  </Step>
+
+  <Step title="Start the development server">
+    ```bash
+    bun run dev
+    ```
+    
+    The site will be available at `http://localhost:5173`
+  </Step>
+</Steps>
+
+## Development Workflow
+
+### Available Scripts
+
+The project includes several npm scripts for development:
+
+```bash
+# Start development server with hot reload
+bun run dev
+
+# Build for production (includes reading time calculation and TypeScript compilation)
+bun run build
+
+# Run ESLint to check code quality
+bun run lint
+
+# Preview production build locally
+bun run preview
+```
+
+### Code Style
+
+The project uses ESLint with TypeScript configuration to maintain code quality. The configuration includes:
+
+- **JavaScript & TypeScript**: ESLint recommended rules and TypeScript ESLint recommended rules
+- **React Hooks**: Enforces Rules of Hooks
+- **React Refresh**: Warns about components that prevent Fast Refresh
+- **Target Files**: `**/*.{ts,tsx}`
+- **ECMAScript Version**: 2020
+- **Environment**: Browser globals
+
+Run the linter before committing:
+
+```bash
+bun run lint
+```
+
+### Building the Project
+
+The build process includes:
+
+1. Generating reading times for blog posts
+2. TypeScript compilation
+3. Vite production build
+
+```bash
+bun run build
+```
+
+Build output is generated in the `dist` directory.
+
+## Technology Stack
+
+- **Framework**: React with Vite
+- **Styling**: Tailwind CSS v4
+- **Content**: MDX for blog posts
+- **Routing**: React Router DOM with vite-plugin-pages
+- **Static Generation**: vite-ssg for SSG
+- **Icons**: Iconsax React, Lucide React, Pikaicons
+- **Animation**: Motion (Framer Motion)
+- **Syntax Highlighting**: rehype-prism-plus
+
+## Submitting Pull Requests
+
+If you'd like to contribute improvements back to the project:
+
+<Steps>
+  <Step title="Create a new branch">
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
+  </Step>
+
+  <Step title="Make your changes">
+    - Write clean, readable code
+    - Follow the existing code style
+    - Run `bun run lint` to check for issues
+    - Test your changes locally with `bun run dev`
+  </Step>
+
+  <Step title="Build and test">
+    ```bash
+    bun run build
+    bun run preview
+    ```
+    
+    Ensure the production build works correctly.
+  </Step>
+
+  <Step title="Commit your changes">
+    ```bash
+    git add .
+    git commit -m "feat: add your feature description"
+    ```
+  </Step>
+
+  <Step title="Push and create PR">
+    ```bash
+    git push origin feature/your-feature-name
+    ```
+    
+    Then open a pull request on GitHub with a clear description of your changes.
+  </Step>
+</Steps>
+
+## Project Structure
+
+```
+bennett-eghan/
+├── src/              # Source code
+├── public/           # Static assets
+├── scripts/          # Build scripts (reading-times.mjs)
+├── dist/             # Production build output
+├── package.json      # Dependencies and scripts
+├── eslint.config.js  # ESLint configuration
+├── tsconfig.json     # TypeScript configuration
+└── vite.config.ts    # Vite configuration
+```
+
+## Questions?
+
+For questions about contributing, please open an issue on the GitHub repository.

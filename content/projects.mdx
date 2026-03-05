@@ -1,0 +1,472 @@
+---
+title: Project Showcase
+description: Managing and displaying projects in your portfolio
+---
+
+The projects page showcases featured work with animated cards, technology stacks, and links to GitHub repos and live demos. Projects are defined as data in `src/pages/projects.tsx`.
+
+## Project Data Structure
+
+Projects are stored as an array of objects in the Projects component:
+
+```typescript title="src/pages/projects.tsx"
+const projects = [
+  {
+    title: "lumon",
+    description:
+      "an ai-powered financial inclusion platform designed to improve access to lending and financial guidance for underserved communities.",
+    tech: ["react", "typeScript", "tailwind", "go"],
+    github: "https://github.com/COV-Lumon-Industries/lumon-tech-dashboard",
+    type: "open source",
+  },
+  {
+    title: "council",
+    description:
+      "council is your intelligent legal co-pilot — a case management platform powered by specialized AI agents working together like a legal team.",
+    tech: ["react", "typeScript", "tailwind", "fastapi"],
+    demo: "https://council.legal/",
+    type: "fellowship work",
+  },
+  // ... more projects
+];
+```
+
+## Project Object Properties
+
+Each project object has the following properties:
+
+<Accordion title="Required Properties">
+  - **title** (string): Project name (lowercase for consistency)
+  - **description** (string): Brief description of what the project does
+  - **tech** (string[]): Array of technologies used
+  - **type** (string): Project category (e.g., "open source", "fellowship work", "personal")
+</Accordion>
+
+<Accordion title="Optional Properties">
+  - **github** (string): GitHub repository URL
+  - **demo** (string): Live demo or production URL
+  
+  <Note>
+    At least one of `github` or `demo` should be provided. Projects can have both.
+  </Note>
+</Accordion>
+
+## Real Project Examples
+
+Here are actual projects from the portfolio:
+
+### Lumon - Open Source Project
+
+```typescript
+{
+  title: "lumon",
+  description:
+    "an ai-powered financial inclusion platform designed to improve access to lending and financial guidance for underserved communities.",
+  tech: ["react", "typeScript", "tailwind", "go"],
+  github: "https://github.com/COV-Lumon-Industries/lumon-tech-dashboard",
+  type: "open source",
+}
+```
+
+### Council - Fellowship Work
+
+```typescript
+{
+  title: "council",
+  description:
+    "council is your intelligent legal co-pilot — a case management platform powered by specialized AI agents working together like a legal team.",
+  tech: ["react", "typeScript", "tailwind", "fastapi"],
+  demo: "https://council.legal/",
+  type: "fellowship work",
+}
+```
+
+### Fusion - Open Source with Demo
+
+```typescript
+{
+  title: "fusion",
+  description:
+    "an open platform for self experimentation. see how changes in your behavior & bio-signals over time impact your life experiences.",
+  tech: ["next", "node", "react native"],
+  github: "https://github.com/peoray/fusion",
+  demo: "https://usefusion.app/",
+  type: "open source",
+}
+```
+
+### Chill Seek - Personal Project
+
+```typescript
+{
+  title: "chill seek",
+  description: "find places to hangout with a single prompt",
+  tech: ["react", ".Net"],
+  demo: "https://chillseek.app",
+  type: "personal",
+}
+```
+
+## Adding a New Project
+
+<Steps>
+  <Step title="Open the projects file">
+    Edit `src/pages/projects.tsx` and locate the `projects` array.
+  </Step>
+
+  <Step title="Add your project object">
+    Add a new object to the array following the structure:
+    
+    ```typescript
+    {
+      title: "my project",
+      description: "brief description of what it does",
+      tech: ["react", "node", "postgres"],
+      github: "https://github.com/username/repo",
+      demo: "https://myproject.com",
+      type: "personal",
+    }
+    ```
+  </Step>
+
+  <Step title="Follow naming conventions">
+    - Use lowercase for title
+    - Keep description concise (1-2 sentences)
+    - Use common tech names: `"react"`, `"typeScript"`, `"tailwind"`, `"node"`, etc.
+    - Choose a type: `"open source"`, `"fellowship work"`, or `"personal"`
+  </Step>
+
+  <Step title="Test the display">
+    Run the dev server and navigate to `/projects`:
+    
+    ```bash
+    npm run dev
+    ```
+    
+    Your project should appear in the list with animations.
+  </Step>
+</Steps>
+
+## Project Card Layout
+
+Each project is rendered as an animated card with the following structure:
+
+### Card Anatomy
+
+```tsx
+<motion.article className="overflow-hidden rounded-[4px] bg-[#E1E4EA]">
+  {/* Decorative top strip */}
+  <div className="h-24 w-full opacity-30" style={{
+    backgroundImage: `repeating-linear-gradient(
+      0deg,
+      #0B0F1F 0px,
+      #0B0F1F 1px,
+      transparent 1px,
+      transparent 4px
+    )`,
+  }} />
+  
+  {/* Content */}
+  <div className="px-6 pb-6 pt-1">
+    <h3>{project.title}</h3>
+    <span>{project.type}</span>
+    <p>{project.description}</p>
+    
+    {/* Tech stack */}
+    <div className="flex flex-wrap gap-2">
+      {project.tech.map((t) => <span>{t}</span>)}
+    </div>
+    
+    {/* Links */}
+    <div className="flex gap-4">
+      {project.github && <a href={project.github}>GitHub</a>}
+      {project.demo && <a href={project.demo}>Demo</a>}
+    </div>
+  </div>
+</motion.article>
+```
+
+### Visual Features
+
+- **Decorative strip**: Horizontal line pattern at the top of each card
+- **Background**: Light gray (`#E1E4EA`) for visual separation
+- **Typography**: Lowercase titles, uppercase type badges
+- **Spacing**: Consistent padding and gaps
+
+## Animations with Framer Motion
+
+Projects use `framer-motion` for smooth entrance animations:
+
+### Page-Level Animation
+
+```typescript
+<motion.div
+  initial={{ opacity: 0, y: 50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{
+    duration: 0.8,
+    ease: [0.25, 0.1, 0.25, 1],
+  }}
+>
+  {/* Projects content */}
+</motion.div>
+```
+
+### Individual Card Animation
+
+```typescript
+<motion.article
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{
+    duration: 0.5,
+    delay: index * 0.1,  // Staggered animation
+    ease: "easeOut",
+  }}
+>
+  {/* Card content */}
+</motion.article>
+```
+
+<Note>
+  Cards animate in sequence with a 0.1s delay between each, creating a smooth cascading effect.
+</Note>
+
+## Technology Stack Display
+
+Tech stacks are displayed as inline text with dot separators:
+
+```typescript
+<div className="flex flex-wrap items-center gap-2">
+  {project.tech.map((t, idx) => (
+    <span key={t} className="font-mono">
+      {t}
+      {idx !== project.tech.length - 1 && (
+        <span className="mx-1.5 text-[#0B0F1F]/50">·</span>
+      )}
+    </span>
+  ))}
+</div>
+```
+
+### Result
+
+```
+react · typeScript · tailwind · go
+```
+
+<Accordion title="Tech Stack Guidelines">
+  - Use lowercase for consistency (e.g., `"react"` not `"React"`)
+  - Use common abbreviations: `"typeScript"` (not `"TypeScript"`), `"js"` (not `"JavaScript"`)
+  - Keep it concise: 2-5 technologies per project
+  - Order by importance: Frontend → Backend → Database
+</Accordion>
+
+## GitHub and Demo Links
+
+Projects can include GitHub repository links and/or live demo links:
+
+### GitHub Links
+
+Rendered with the GitHub icon from `pikaicons`:
+
+```typescript
+{project.github && (
+  <a
+    href={project.github}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-[#0B0F1F] hover:opacity-70 transition"
+    aria-label="GitHub"
+  >
+    <Github width={22} height={22} />
+  </a>
+)}
+```
+
+### Demo Links
+
+Rendered with the LinkSlant icon:
+
+```typescript
+{project.demo && (
+  <a
+    href={project.demo}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-[#0B0F1F] hover:opacity-70 transition"
+    aria-label="Demo"
+  >
+    <LinkSlant width={22} height={22} />
+  </a>
+)}
+```
+
+<Note>
+  All external links use `target="_blank"` and `rel="noopener noreferrer"` for security and proper behavior.
+</Note>
+
+## Project Types
+
+The portfolio uses project types to categorize work:
+
+| Type | Description | Example |
+|------|-------------|----------|
+| **open source** | Public GitHub projects | lumon, fusion, loop |
+| **fellowship work** | Projects from fellowships/programs | council |
+| **personal** | Personal side projects | chill seek |
+
+<Accordion title="Styling Project Types">
+  Project types are displayed as uppercase badges:
+  
+  ```typescript
+  <span className="text-[12px] font-medium uppercase tracking-wide text-[#0B0F1F]/80">
+    {project.type}
+  </span>
+  ```
+  
+  This creates a clear visual hierarchy: **OPEN SOURCE**, **FELLOWSHIP WORK**, **PERSONAL**
+</Accordion>
+
+## SEO for Projects Page
+
+The projects page includes comprehensive SEO metadata:
+
+```typescript
+<Helmet>
+  <title>abena | projects</title>
+  <meta name="description" content="things i have built" />
+  <meta property="og:title" content="projects — abena" />
+  <meta property="og:description" content="things i have built" />
+  <meta property="og:image" content="https://www.bennett-eghan.com/og-main.png?v=2" />
+  <meta property="og:url" content="https://www.bennett-eghan.com/projects" />
+  <meta property="og:type" content="website" />
+</Helmet>
+```
+
+### SEO Best Practices
+
+- **Unique titles**: Each page has a distinct title
+- **Descriptive meta**: Brief but informative descriptions
+- **Open Graph**: Social media preview support
+- **Canonical URLs**: Proper URL structure for SEO
+
+## Styling Customization
+
+The projects page uses a consistent color scheme:
+
+```css
+/* Main text color */
+#0B0F1F
+
+/* Background color */
+#E1E4EA
+
+/* Muted text (dates, separators) */
+#0B0F1F/80 or #888888
+```
+
+### Responsive Design
+
+Cards adapt to different screen sizes:
+
+```typescript
+<div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+  <div className="flex-1 min-w-0">
+    {/* Project info */}
+  </div>
+  <div className="flex items-center gap-4 shrink-0">
+    {/* Links */}
+  </div>
+</div>
+```
+
+- **Mobile**: Stacked layout
+- **Desktop**: Side-by-side with links on the right
+
+## Footer Link
+
+The projects page includes a footer link to the full GitHub profile:
+
+```typescript
+<div className="mt-12 text-[14px] text-[#0B0F1F]">
+  see more on{" "}
+  <a
+    href="https://github.com/abena07"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-[#0B0F1F] hover:underline font-medium"
+  >
+    github
+  </a>
+</div>
+```
+
+This encourages visitors to explore additional projects beyond the featured ones.
+
+## Best Practices
+
+<Accordion title="Content Guidelines">
+  - **Keep descriptions brief**: 1-2 sentences max
+  - **Use active voice**: "find places to hangout" not "helps users find places"
+  - **Be specific**: Explain what the project does, not just what it is
+  - **Maintain lowercase aesthetic**: Consistent with portfolio style
+  - **Update regularly**: Remove outdated projects, add new work
+</Accordion>
+
+<Accordion title="Technical Guidelines">
+  - **Test all links**: Ensure GitHub and demo URLs work
+  - **Optimize animations**: Keep delays subtle (0.1s increments)
+  - **Responsive design**: Test on mobile and desktop
+  - **Performance**: Limit to 5-7 featured projects for optimal load times
+  - **Icons**: Use consistent icon sizes (22x22px)
+</Accordion>
+
+## Example Project Addition
+
+Here's a complete example of adding a new project:
+
+```typescript
+const projects = [
+  // ... existing projects
+  {
+    title: "task master",
+    description:
+      "a minimalist task management app with AI-powered priority suggestions and calendar integration.",
+    tech: ["next", "typeScript", "prisma", "openai"],
+    github: "https://github.com/username/task-master",
+    demo: "https://taskmaster.app",
+    type: "personal",
+  },
+];
+```
+
+This follows all conventions:
+- Lowercase title
+- Concise description
+- 4 key technologies
+- Both GitHub and demo links
+- Clear project type
+
+## Troubleshooting
+
+<Accordion title="Projects not displaying">
+  - Check that the project object is properly formatted
+  - Ensure commas between objects in the array
+  - Verify that `tech` is an array, not a string
+  - Check browser console for errors
+</Accordion>
+
+<Accordion title="Links not working">
+  - Verify URLs start with `https://`
+  - Test links in a new tab
+  - Check for typos in the URL
+  - Ensure `target="_blank"` is set
+</Accordion>
+
+<Accordion title="Animations not smooth">
+  - Check that `framer-motion` is installed
+  - Verify transition values are numbers, not strings
+  - Test with reduced delay values
+  - Clear browser cache and reload
+</Accordion>

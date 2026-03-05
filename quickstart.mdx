@@ -1,80 +1,214 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get the Bennett Eghan portfolio website running locally in minutes with this step-by-step guide.
 ---
 
-## Get started in three steps
+Get the portfolio up and running on your local machine in just a few minutes. This guide walks you through cloning the repository, installing dependencies, and starting the development server.
 
-Get your documentation site running locally and make your first customization.
+## Prerequisites
 
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
+Before you begin, ensure you have the following installed:
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Node.js" icon="node-js">
+    Version 18 or higher recommended
+  </Card>
+  <Card title="Package Manager" icon="box">
+    Bun, npm, or Yarn (Bun 1.1.38+ recommended)
+  </Card>
 </CardGroup>
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  This project uses **Bun 1.1.38** as the default package manager. You can also use npm or Yarn if preferred.
 </Note>
+
+## Installation
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone the Bennett Eghan portfolio from GitHub:
+    
+    ```bash
+    git clone https://github.com/abena07/bennett-eghan.git
+    cd bennett-eghan
+    ```
+    
+    This downloads the source code and navigates into the project directory.
+  </Step>
+
+  <Step title="Install dependencies">
+    Install all required packages using your preferred package manager:
+    
+    <CodeGroup>
+      ```bash bun
+      bun install
+      ```
+      
+      ```bash npm
+      npm install
+      ```
+      
+      ```bash yarn
+      yarn install
+      ```
+    </CodeGroup>
+    
+    This installs all dependencies including React, Vite, TypeScript, Tailwind CSS, and MDX tooling.
+  </Step>
+
+  <Step title="Start the development server">
+    Run the development server with hot module replacement:
+    
+    <CodeGroup>
+      ```bash bun
+      bun dev
+      ```
+      
+      ```bash npm
+      npm run dev
+      ```
+      
+      ```bash yarn
+      yarn dev
+      ```
+    </CodeGroup>
+    
+    The development server will start on **http://localhost:5173** by default.
+  </Step>
+
+  <Step title="Verify the installation">
+    Open your browser and navigate to **http://localhost:5173**. You should see:
+    
+    - The homepage with Bennett Eghan's profile
+    - Navigation menu (Projects, Blog)
+    - Monospace Courier New typography
+    - Tailwind CSS styling with the custom color palette
+    
+    <Tip>
+      The Vite development server includes fast hot module replacement (HMR). Any changes you make to source files will be reflected instantly in the browser.
+    </Tip>
+  </Step>
+</Steps>
+
+## Building for Production
+
+When you're ready to build the optimized production bundle:
+
+<Steps>
+  <Step title="Run the build command">
+    Execute the build script which generates reading times and compiles the application:
+    
+    <CodeGroup>
+      ```bash bun
+      bun run build
+      ```
+      
+      ```bash npm
+      npm run build
+      ```
+      
+      ```bash yarn
+      yarn build
+      ```
+    </CodeGroup>
+    
+    This command:
+    1. Runs `scripts/reading-times.mjs` to calculate reading times for blog posts
+    2. Compiles TypeScript using `tsc -b`
+    3. Builds the optimized production bundle with Vite
+    
+    The output will be in the `dist/` directory.
+  </Step>
+
+  <Step title="Preview the production build">
+    Test the production build locally before deploying:
+    
+    <CodeGroup>
+      ```bash bun
+      bun run preview
+      ```
+      
+      ```bash npm
+      npm run preview
+      ```
+      
+      ```bash yarn
+      yarn preview
+      ```
+    </CodeGroup>
+    
+    This serves the production build locally for testing. Access it at **http://localhost:4173**.
+  </Step>
+</Steps>
+
+## Available Scripts
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| `dev` | `vite` | Start development server with HMR |
+| `build` | `node scripts/reading-times.mjs && bunx tsc -b && bunx vite build` | Build optimized production bundle |
+| `lint` | `eslint .` | Run ESLint to check code quality |
+| `preview` | `vite preview` | Preview production build locally |
+
+## What's Running?
+
+When you start the development server, Vite configures:
+
+- **React 18** with Fast Refresh for instant updates
+- **TypeScript** type checking
+- **Tailwind CSS 4** with the @tailwindcss/vite plugin
+- **MDX** processing for blog posts with:
+  - `rehype-prism-plus` for syntax highlighting
+  - `remark-gfm` for GitHub-flavored markdown
+  - `remark-emoji` for emoji support
+- **Path aliases** (`@/` maps to `src/`)
+- **Sitemap generation** for https://www.bennett-eghan.com
+
+See `vite.config.ts:15-40` for the complete Vite configuration.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Customize Content" icon="pen-to-square" href="/content/blog-posts">
+    Remove personal information and add your own blog posts and projects
+  </Card>
+  <Card title="Manage Projects" icon="briefcase" href="/content/projects">
+    Add and manage your project showcase
+  </Card>
+  <Card title="Explore Components" icon="layer-group" href="/components/overview">
+    Learn about the React component architecture
+  </Card>
+  <Card title="Styling System" icon="palette" href="/styling/design-system">
+    Understand the Tailwind CSS configuration
+  </Card>
+</CardGroup>
+
+<Warning>
+  **Important**: Before deploying your own version, please remove all personal information including blog posts, resume data, images, and project details. Review the [LICENSE](https://github.com/abena07/bennett-eghan/blob/main/LICENSE) for usage terms.
+</Warning>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Port 5173 is already in use">
+    If another process is using port 5173, Vite will automatically try the next available port (5174, 5175, etc.). Check the terminal output for the actual URL.
+  </Accordion>
+  
+  <Accordion title="TypeScript errors during build">
+    Run `bunx tsc --noEmit` to check for type errors without building. Fix any errors in your source code before running the build again.
+  </Accordion>
+  
+  <Accordion title="MDX compilation errors">
+    Ensure your MDX files have valid frontmatter and proper JSX syntax. Check `vite.config.ts:18` for MDX plugin configuration.
+  </Accordion>
+  
+  <Accordion title="Module resolution errors">
+    The project uses path aliases with `@/` mapping to `src/`. If you see import errors, verify the path alias configuration in `vite.config.ts:42-46`.
+  </Accordion>
+</AccordionGroup>
+
+## Need Help?
+
+- **GitHub Issues**: [Report bugs or request features](https://github.com/abena07/bennett-eghan/issues)
+- **Source Code**: [View the repository](https://github.com/abena07/bennett-eghan)
+- **Website**: [Visit the live site](https://www.bennett-eghan.com)
