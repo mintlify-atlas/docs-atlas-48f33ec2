@@ -50,7 +50,7 @@
     "React + Vite frontend with TypeScript",
     "MDX-powered blog system with code highlighting",
     "Tailwind CSS styling with custom design system",
-    "Static site generation for Vercel deployment",
+    "Optimized builds for Vercel deployment",
     "Responsive project showcase with animations"
   ],
   "publicApiSurface": [
